@@ -1,5 +1,5 @@
 # Chicken / Egg (2022)
-A visual algorithm or a tree growing and reproducing. Created using p5.js, Webmidi.js and Webpack. Started from a fork of the FXHash boilerplate for easy seeding of random values.
+A visual algorithm of a tree growing and reproducing. Created using p5.js, Webmidi.js and Webpack. Started from a fork of the FXHash boilerplate for easy seeding of random values.
 
 Built for a post-graduate submission.
 
