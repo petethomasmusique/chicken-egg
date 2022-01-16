@@ -10,7 +10,7 @@ const frameRate = 32
 const tFrameRate = 8
 const height = canvas.getBoundingClientRect().height
 const unit = (height/750)
-const capture = true
+const capture = false
 const duration = 60 * 5.5 * frameRate
 
 var capturer = new CCapture({ 
@@ -94,7 +94,6 @@ const sketch = (p) => {
       p.circle(seed.x, seed.y, seed.r)
       !seed.isBouncing && (nextTree = getTree(seed.x));
       seeds[i + 1] = seed.isBouncing ? moveSeed(seed) : seed;
-      // Play note when hits the bottom from channels 8 onwards
       seed.isAtTheBottom && WebMidi.outputs[0].playNote(60, i + 8, { 
         rawVelocity: false, 
         velocity: Math.floor(scale(floor, 0, 127, 0, seed.height)),
@@ -111,8 +110,7 @@ const sketch = (p) => {
 
         const size = unit * (array.length - i) || 1
         
-        // TODO - remove this on render?
-        // if(size > 3 && isOdd(i)) return
+        if(size > 3 && isOdd(i)) return
 
         let alpha = flash 
           ? (1/height) * (ring.y)
@@ -129,12 +127,12 @@ const sketch = (p) => {
         if(tCounter < start || fade <= 0.01) return
         const lastRing = rings[tCounter - start] || rings[rings.length - 1]
         if(tCounter < tree.end) {
-          // WebMidi.outputs[0].sendControlChange(1, Math.floor(scale(height, 0, 127, 0, lastRing.x)), i + 1)
-          // WebMidi.outputs[0].sendControlChange(2, Math.floor(scale(0, floor, 127, 0, lastRing.y)), i + 1)
-          // WebMidi.outputs[0].playNote(60, i + 1, { 
-          //   rawVelocity: false, 
-          //   velocity: lightning
-          // });
+          WebMidi.outputs[0].sendControlChange(1, Math.floor(scale(height, 0, 127, 0, lastRing.x)), i + 1)
+          WebMidi.outputs[0].sendControlChange(2, Math.floor(scale(0, floor, 127, 0, lastRing.y)), i + 1)
+          WebMidi.outputs[0].playNote(60, i + 1, { 
+            rawVelocity: false, 
+            velocity: lightning
+          });
         }
       });
       tCounter++;
@@ -155,6 +153,9 @@ const sketch = (p) => {
   }
   p.draw = draw
   
+  // Use the below for more accurate timing. CPU load of rendering makes for poorly timed events.
+  // Ended up rendering visuals and recording MIDI events separately.
+
   // Tone.Transport.scheduleRepeat((time) => {
   //   draw()
   // }, "64n");
