@@ -6,7 +6,7 @@ export const makeSeed = (x, y, floor) => {
 }
 
 export const moveSeed = (seed => {
-    let { y, dy, r, floor, height } = seed
+    let { y, dy, floor, height } = seed
     const isBouncing = height === 0 || floor - height > 2.5
     const isAtTheBottom = y > floor
     dy = isAtTheBottom ? -(Math.abs(dy)) * friction : dy + speed // + speed
